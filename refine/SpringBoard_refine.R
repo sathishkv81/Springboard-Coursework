@@ -1,3 +1,7 @@
+require(dplyr)
+require(tidyr)
+Testing <- read.csv('refine_original.csv', stringsAsFactors=FALSE)
+
 #Assumption: Data is imported into RStudio variable Testing
 # 1: Clean up brand names
 # Clean up the 'company' column, so all of the misspellings of the brand names are standardized. 
@@ -21,8 +25,14 @@ Testing <- Testing %>% separate(Product.code...number,c("Product_code","Product_
 #q = Tablet
 #In order to make the data more readable, add a column with the product category for each record.
 
-Testing <- Testing %>% mutate(product_category = ifelse(Product_code %in% "p", "Smartphone",ifelse(Product_code %in% "v", "TV", ifelse(Product_code %in% "x", "Laptop", ifelse(Product_code %in% "q", "Tablet","NA")))))
-
+Testing <- Testing %>% mutate(product_category = recode(Product_code,
+    p = 'Smartphone',
+    v = 'TV',
+    x = 'Laptop',
+    q = 'Tablet'
+))
+                             
+                             
 #4: Add full address for geocoding
 #You'd like to view the customer information on a map. In order to do that, the addresses need to be in a form that can be easily geocoded. 
 #Create a new column full_address that concatenates the three address fields (address, city, country), separated by commas.
